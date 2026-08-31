@@ -138,4 +138,38 @@ html[data-theme="glass"] {
   .animate-float-slower { animation: float-slower 13s ease-in-out infinite; }
   .animate-halo-pulse { animation: halo-pulse 4.2s ease-in-out infinite; }
   .animate-halo-pulse-sub { animation: halo-pulse-sub 5.6s ease-in-out infinite; }
+
+  /* ========== 线截断（Tailwind 内置 line-clamp 插件未装，手写替代） ========== */
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* ========== 细滚动条（横滑分类栏 / textarea 使用） ========== */
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(var(--color-border)) transparent;
+  }
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background: rgb(var(--color-border));
+    border-radius: 999px;
+  }
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background: rgb(var(--color-text-tertiary) / 0.5);
+  }
 }
