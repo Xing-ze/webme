@@ -1,44 +1,42 @@
 <script setup lang="ts">
+import { RouterView } from 'vue-router'
 </script>
 
 <template>
-  <div class="welcome">
-    <h1>WebMe 🌱</h1>
-    <p>你的个人数字空间，正在搭建中...</p>
-    <p class="hint">第一阶段 · 项目脚手架已就绪</p>
+  <div class="min-h-screen bg-surface text-primary transition-colors duration-300">
+    <!-- 顶部临时导航条（阶段一 Task 2 会替换为正式布局组件） -->
+    <header class="sticky top-0 z-40 glass-card mx-auto max-w-6xl mt-4 px-6 py-3 flex items-center justify-between">
+      <div class="flex items-center gap-2 text-lg font-semibold tracking-tight text-primary">
+        🌱 <span>WebMe</span>
+      </div>
+      <nav class="flex items-center gap-1 text-sm">
+        <RouterLink to="/" class="px-3 py-1.5 rounded-fullButton hover:bg-surface-tertiary transition-colors">主页</RouterLink>
+        <RouterLink to="/knowledge" class="px-3 py-1.5 rounded-fullButton hover:bg-surface-tertiary transition-colors">知识库</RouterLink>
+        <RouterLink to="/media" class="px-3 py-1.5 rounded-fullButton hover:bg-surface-tertiary transition-colors">媒体中心</RouterLink>
+        <RouterLink to="/settings" class="px-3 py-1.5 rounded-fullButton hover:bg-surface-tertiary transition-colors">设置</RouterLink>
+      </nav>
+    </header>
+    <main class="mx-auto max-w-6xl px-4 py-8">
+      <RouterView v-slot="{ Component, route }">
+        <transition name="fade-slide" mode="out-in">
+          <component :is="Component" :key="route.fullPath" />
+        </transition>
+      </RouterView>
+    </main>
   </div>
 </template>
 
 <style scoped>
-.welcome {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 2rem;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'PingFang SC', 'Helvetica Neue', sans-serif;
+.fade-slide-enter-active,
+.fade-slide-leave-active {
+  transition: opacity 220ms ease, transform 220ms ease;
 }
-.welcome h1 {
-  font-size: 3.5rem;
-  margin: 0 0 1rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+.fade-slide-enter-from {
+  opacity: 0;
+  transform: translateY(12px);
 }
-.welcome p {
-  font-size: 1.25rem;
-  color: #555;
-  margin: 0.5rem 0;
-}
-.welcome .hint {
-  margin-top: 2rem;
-  font-size: 0.9rem;
-  color: #999;
-  padding: 0.5rem 1.25rem;
-  border-radius: 999px;
-  background: rgba(102, 126, 234, 0.08);
+.fade-slide-leave-to {
+  opacity: 0;
+  transform: translateY(-8px);
 }
 </style>
