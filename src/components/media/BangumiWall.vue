@@ -4,6 +4,7 @@ import { Play, CircleCheck, Bookmark, Pause, XCircle } from 'lucide-vue-next'
 import type { Bangumi, BangumiStatus } from '@/types/media'
 import { BANGUMI_STATUS, BANGUMI_STATUS_MAP } from '@/types/media'
 import { useMediaStore } from '@/stores/media'
+import BaseCard from '@/components/common/BaseCard.vue'
 
 const store = useMediaStore()
 
@@ -84,10 +85,14 @@ function progressRatio(b: Bangumi): number {
       v-if="filteredBangumi.length > 0"
       class="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5"
     >
-      <div
+      <BaseCard
         v-for="b in filteredBangumi"
         :key="b.id"
-        class="glass-card p-3 hover:-translate-y-1 hover:shadow-cardHover transition-all duration-300"
+        :glass="true"
+        :hoverable="true"
+        :ripple="true"
+        :tilt="true"
+        class="!p-3 aspect-auto hover:!-translate-y-1"
       >
         <!-- Cover -->
         <div class="relative aspect-[3/4] w-full overflow-hidden rounded-xl2 bg-surface-tertiary">
@@ -164,7 +169,7 @@ function progressRatio(b: Bangumi): number {
             「{{ b.lastWatchText }}」
           </div>
         </div>
-      </div>
+      </BaseCard>
     </div>
 
     <!-- Empty state for filter -->

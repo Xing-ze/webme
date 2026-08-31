@@ -57,6 +57,19 @@ onMounted(() => {
             trigger: cardEl,
             start: 'top 85%',
             once: true,
+            onEnter: () => {
+              // 弹入完成后，启动持续呼吸 pulse
+              gsap.to(dotEl, {
+                keyframes: [
+                  { scale: 1.08, opacity: 0.85, duration: 0.9 },
+                  { scale: 1, opacity: 1, duration: 0.9 },
+                ],
+                repeat: -1,
+                yoyo: false,
+                ease: 'sine.inOut',
+                delay: 0.3,
+              })
+            },
           },
         }
       )

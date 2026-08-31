@@ -26,6 +26,47 @@ const titleRef = ref<HTMLElement | null>(null)
 const headlineRef = ref<HTMLElement | null>(null)
 const socialRefs = ref<Array<HTMLElement | null>>([])
 
+function onSocialClick(e: MouseEvent) {
+  const el = e.currentTarget as HTMLElement
+  gsap.fromTo(
+    el,
+    { scale: 1 },
+    {
+      scale: 1.15,
+      duration: 0.18,
+      yoyo: true,
+      repeat: 1,
+      ease: 'power2.out',
+    }
+  )
+}
+
+function onAvatarEnter(e: MouseEvent) {
+  const el = (e.currentTarget as HTMLElement).querySelector<HTMLElement>('[data-avatar-circle]')
+  if (el) {
+    gsap.to(el, {
+      rotate: 2,
+      duration: 0.3,
+      ease: 'power2.out',
+    })
+    el.style.filter = 'drop-shadow(0 4px 24px rgb(var(--color-accent) / 0.8))'
+  }
+}
+
+function onAvatarLeave(e: MouseEvent) {
+  const el = (e.currentTarget as HTMLElement).querySelector<HTMLElement>('[data-avatar-circle]')
+  if (el) {
+    gsap.to(el, {
+      rotate: 0,
+      duration: 0.3,
+      ease: 'power2.out',
+      onComplete: () => {
+        el!.style.filter = ''
+      },
+    })
+  }
+}
+
 onMounted(() => {
   const tl = gsap.timeline()
 
@@ -104,7 +145,13 @@ onMounted(() => {
       class="relative z-10 flex w-full flex-col items-center gap-10 md:flex-row md:items-center md:justify-center"
     >
       <!-- 头像区：双层光晕 + 头像 -->
-      <div ref="avatarRef" class="relative shrink-0" style="opacity: 0">
+      <div
+        ref="avatarRef"
+        class="relative shrink-0 cursor-pointer"
+        style="opacity: 0"
+        @mouseenter="onAvatarEnter"
+        @mouseleave="onAvatarLeave"
+      >
         <!-- 外层光晕 -->
         <div
           class="absolute -inset-4 rounded-full bg-accent/20 blur-xl animate-halo-pulse-sub"
@@ -115,7 +162,8 @@ onMounted(() => {
         />
         <!-- 头像本体 -->
         <div
-          class="relative w-40 h-40 md:w-52 md:h-52 overflow-hidden rounded-full ring-4 ring-accent/30 shadow-glow"
+          data-avatar-circle
+          class="relative w-40 h-40 md:w-52 md:h-52 overflow-hidden rounded-full ring-4 ring-accent/30 shadow-glow transition-transform duration-300"
         >
           <img
             v-if="!avatarError"
@@ -171,6 +219,7 @@ onMounted(() => {
             class="w-11 h-11 rounded-fullButton bg-surface-secondary border border-default flex items-center justify-center transition-all duration-300 hover:-translate-y-1 hover:shadow-card hover:scale-110"
             :style="{ opacity: 0 }"
             :title="social.name"
+            @click="onSocialClick"
             @mouseenter="(e) => { const t = e.currentTarget as HTMLElement; t.style.color = social.color ?? ''; t.style.borderColor = social.color ? social.color + '60' : ''; }"
             @mouseleave="(e) => { const t = e.currentTarget as HTMLElement; t.style.color = ''; t.style.borderColor = ''; }"
           >

@@ -309,6 +309,30 @@ function animateProgressBars() {
   })
 }
 
+function animateChartContainers() {
+  // 3 个图表容器入场 stagger
+  const charts: HTMLElement[] = []
+  if (heatmapDom.value) charts.push(heatmapDom.value)
+  if (pieDom.value) charts.push(pieDom.value)
+  if (barDom.value) charts.push(barDom.value)
+  if (charts.length === 0) return
+
+  // 初始设置（如果不是由 style 写死的话）
+  charts.forEach((c) => {
+    c.style.opacity = '0'
+    c.style.transform = 'translateY(20px)'
+  })
+
+  gsap.to(charts, {
+    opacity: 1,
+    y: 0,
+    duration: 0.55,
+    stagger: 0.12,
+    ease: 'power3.out',
+    delay: 0.1,
+  })
+}
+
 // 当网易云数据变化 + DOM 准备好 时初始化图表
 let _inited = false
 onMounted(async () => {
@@ -324,6 +348,7 @@ onMounted(async () => {
         _inited = true
         await nextTick()
         animateProgressBars()
+        animateChartContainers()
       }
     }, { immediate: true })
   } else {
@@ -332,6 +357,7 @@ onMounted(async () => {
     _inited = true
     await nextTick()
     animateProgressBars()
+    animateChartContainers()
   }
 })
 

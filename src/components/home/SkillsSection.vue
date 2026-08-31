@@ -11,6 +11,25 @@ gsap.registerPlugin(ScrollTrigger)
 const sectionRef = ref<HTMLElement | null>(null)
 const gridRef = ref<HTMLElement | null>(null)
 const pillRefs = ref<Array<HTMLElement | null>>([])
+// 防抖 map：key=全局索引，value=是否正在动画
+const pillAnimating = new Map<number, boolean>()
+
+function onPillEnter(e: MouseEvent, globalIdx: number) {
+  if (pillAnimating.get(globalIdx)) return
+  pillAnimating.set(globalIdx, true)
+  const el = e.currentTarget as HTMLElement
+  gsap.fromTo(
+    el,
+    { y: 0 },
+    {
+      keyframes: [{ y: -3, duration: 0.25 }, { y: 0, duration: 0.25 }],
+      ease: 'bounce.out',
+      onComplete: () => {
+        pillAnimating.set(globalIdx, false)
+      },
+    }
+  )
+}
 
 // category 顺序：program, engine, test, tool, perf, collab
 const categoryOrder: Skill['category'][] = [
@@ -154,6 +173,14 @@ onBeforeUnmount(() => {
                 : skill.level === 1
                 ? '了解'
                 : ''
+            "
+            @mouseenter="
+              (e) => {
+                const globalIdx = profile.skills.findIndex(
+                  (s) => s.name === skill.name
+                )
+                onPillEnter(e as MouseEvent, globalIdx)
+              }
             "
           >
             <span class="inline-flex items-center gap-1.5">

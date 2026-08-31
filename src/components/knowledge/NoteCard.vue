@@ -48,7 +48,7 @@ const createdAtAbs = computed(() => formatAbsolute(props.note.createdAt))
 </script>
 
 <template>
-  <BaseCard class="h-full flex flex-col relative overflow-hidden group">
+  <BaseCard :ripple="true" :tilt="true" class="h-full flex flex-col relative overflow-hidden group !p-6">
     <!-- 置顶高亮条 -->
     <div
       v-if="note.pinned"

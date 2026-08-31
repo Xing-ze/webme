@@ -1,9 +1,51 @@
 <script setup lang="ts">
-import { computed, onMounted, onBeforeUnmount } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import { Home, BookOpen, Tv, Settings } from 'lucide-vue-next'
 import { RouterView, RouterLink, useRoute } from 'vue-router'
+import { gsap } from 'gsap'
 import { useThemeStore } from '@/composables/useTheme'
 import ThemeSwitcher from '@/components/theme/ThemeSwitcher.vue'
+
+// ========== 全局鼠标跟随光晕（Cursor Glow） ==========
+const cursorGlowRef = ref<HTMLElement | null>(null)
+
+function onGlowMouseMove(e: MouseEvent) {
+  if (!cursorGlowRef.value) return
+  const x = e.clientX - 20 // 40px 直径的一半
+  const y = e.clientY - 20
+  gsap.to(cursorGlowRef.value, {
+    x,
+    y,
+    duration: 0.6,
+    ease: 'power3.out',
+  })
+}
+
+// ========== GSAP 路由过渡钩子 ==========
+function onBeforeEnter(el: Element) {
+  gsap.set(el as HTMLElement, { opacity: 0, y: 12, filter: 'blur(4px)' })
+}
+function onEnter(el: Element, done: () => void) {
+  gsap.to(el as HTMLElement, {
+    opacity: 1,
+    y: 0,
+    filter: 'blur(0px)',
+    duration: 0.28,
+    ease: 'power3.out',
+    delay: 0.08,
+    onComplete: done,
+  })
+}
+function onLeave(el: Element, done: () => void) {
+  gsap.to(el as HTMLElement, {
+    opacity: 0,
+    y: -10,
+    filter: 'blur(4px)',
+    duration: 0.2,
+    ease: 'power2.in',
+    onComplete: done,
+  })
+}
 
 const themeStore = useThemeStore()
 const route = useRoute()
@@ -43,17 +85,34 @@ function onKeyDown(e: KeyboardEvent) {
   }
 }
 
+const isTouchDevice = ref(false)
+
 onMounted(() => {
   window.addEventListener('keydown', onKeyDown)
+  isTouchDevice.value =
+    typeof window !== 'undefined' &&
+    window.matchMedia('(pointer: coarse)').matches
+  // 非触摸设备才绑定 cursor-glow 跟随
+  if (!isTouchDevice.value) {
+    window.addEventListener('mousemove', onGlowMouseMove)
+  }
 })
 
 onBeforeUnmount(() => {
   window.removeEventListener('keydown', onKeyDown)
+  window.removeEventListener('mousemove', onGlowMouseMove)
 })
 </script>
 
 <template>
   <div class="min-h-screen w-full bg-surface text-primary transition-colors duration-300">
+    <!-- 全局鼠标跟随光晕（仅桌面端显示） -->
+    <div
+      v-if="!isTouchDevice"
+      ref="cursorGlowRef"
+      class="fixed top-0 left-0 z-[60] pointer-events-none hidden md:block"
+      style="width:40px;height:40px;border-radius:9999px;background:radial-gradient(circle, rgb(var(--color-accent) / 0.18) 0%, transparent 70%);"
+    />
     <!-- ==================== 桌面端布局（lg 及以上） ==================== -->
     <div class="hidden lg:flex">
       <!-- 左侧侧边栏 -->
@@ -103,9 +162,15 @@ onBeforeUnmount(() => {
           </div>
         </header>
         <!-- 路由内容 -->
-        <main class="mx-auto w-full max-w-6xl flex-1 p-6">
+        <main class="mx-auto w-full max-w-6xl flex-1 p-6 perspective-[1000px]">
           <RouterView v-slot="{ Component: RouteComponent, route: activeRoute }">
-            <transition name="fade-slide" mode="out-in">
+            <transition
+              name="gsap-route"
+              mode="out-in"
+              @before-enter="onBeforeEnter"
+              @enter="onEnter"
+              @leave="onLeave"
+            >
               <component :is="RouteComponent" :key="activeRoute.fullPath" />
             </transition>
           </RouterView>
@@ -127,9 +192,15 @@ onBeforeUnmount(() => {
       </header>
 
       <!-- 内容 -->
-      <main class="flex-1 px-4 pt-5 pb-28">
+      <main class="flex-1 px-4 pt-5 pb-28 perspective-[1000px]">
         <RouterView v-slot="{ Component: RouteComponent, route: activeRoute }">
-          <transition name="fade-slide" mode="out-in">
+          <transition
+            name="gsap-route"
+            mode="out-in"
+            @before-enter="onBeforeEnter"
+            @enter="onEnter"
+            @leave="onLeave"
+          >
             <component :is="RouteComponent" :key="activeRoute.fullPath" />
           </transition>
         </RouterView>
@@ -157,16 +228,12 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped>
-.fade-slide-enter-active,
-.fade-slide-leave-active {
-  transition: opacity 220ms ease, transform 220ms ease;
+/* GSAP 钩子控制动画，这里仅提供骨架保护 */
+.gsap-route-enter-active,
+.gsap-route-leave-active {
+  /* 由 JS 钩子控制动画，此处留空 */
 }
-.fade-slide-enter-from {
-  opacity: 0;
-  transform: translateY(12px);
-}
-.fade-slide-leave-to {
-  opacity: 0;
-  transform: translateY(-8px);
+.gsap-route-move {
+  transition: transform 250ms ease;
 }
 </style>
