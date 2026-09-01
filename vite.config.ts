@@ -17,5 +17,32 @@ export default defineConfig({
   server: {
     port: 5173,
     host: true
-  }
+  },
+  optimizeDeps: {
+    include: ['gsap', 'dexie']
+  },
+  build: {
+    chunkSizeWarningLimit: 1024,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          // 运行时核芯（Vue生态）
+          'vue-core': ['vue', 'vue-router', 'pinia'],
+          // GSAP 动画
+          'gsap-lib': ['gsap'],
+          // echarts 最小化核芯
+          'echarts-lib': [
+            'echarts/core',
+            'echarts/renderers',
+            'echarts/charts',
+            'echarts/components',
+          ],
+          // 图标库
+          'lucide': ['lucide-vue-next'],
+          // Dexie 数据库
+          'dexie': ['dexie'],
+        },
+      },
+    },
+  },
 })

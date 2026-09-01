@@ -1,0 +1,16 @@
+{
+  "name": "WebMe - Xing-ze 个人数字空间",
+  "short_name": "WebMe",
+  "description": "Xing-ze 的个人数字空间：主页 · 知识库 · B 站追番 · 网易云音乐年度报告",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#ffffff",
+  "theme_color": "#667eea",
+  "lang": "zh-CN",
+  "icons": [
+    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "/apple-touch-icon.svg", "sizes": "180x180", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}

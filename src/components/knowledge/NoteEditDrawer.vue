@@ -173,10 +173,10 @@ onBeforeUnmount(() => {
         >
           <aside
             v-if="visible"
-            class="absolute top-0 right-0 h-full w-full sm:w-[560px] md:w-[640px]
+            class="fixed top-0 right-0 h-full w-full sm:w-[560px] md:w-[640px] z-50
                    glass-card rounded-l-glass shadow-cardHover
-                   flex flex-col overflow-hidden"
-            style="border-radius: 16px 0 0 16px;"
+                   flex flex-col p-6 pt-[calc(1.5rem+env(safe-area-inset-top))] pb-[calc(1.5rem+env(safe-area-inset-bottom))]
+                   overflow-y-auto"
           >
             <!-- 顶栏 -->
             <header class="flex items-center justify-between px-6 py-4 border-b border-default/70 shrink-0">

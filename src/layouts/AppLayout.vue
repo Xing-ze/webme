@@ -117,7 +117,7 @@ onBeforeUnmount(() => {
     <div class="hidden lg:flex">
       <!-- 左侧侧边栏 -->
       <aside
-        class="sticky top-0 z-50 flex h-screen w-64 flex-shrink-0 flex-col justify-between glass-card m-3 p-5"
+        class="sticky top-0 z-50 flex h-screen w-64 flex-shrink-0 flex-col justify-between glass-card m-3 p-5 pt-[env(safe-area-inset-top)]"
       >
         <div class="flex flex-col gap-8">
           <!-- Logo 区 -->
@@ -152,7 +152,7 @@ onBeforeUnmount(() => {
       <!-- 右侧内容区 -->
       <section class="flex min-h-screen flex-1 flex-col">
         <!-- 顶部工具栏（面包屑） -->
-        <header class="sticky top-0 z-30 bg-surface/80 backdrop-blur-xl">
+        <header class="sticky top-0 z-30 bg-surface/80 backdrop-blur-xl pt-[env(safe-area-inset-top)]">
           <div class="mx-auto flex max-w-6xl items-center px-8 py-5">
             <div class="flex items-center gap-2 text-sm">
               <span class="text-tertiary">WebMe</span>
@@ -182,7 +182,7 @@ onBeforeUnmount(() => {
     <div class="flex min-h-screen flex-col lg:hidden">
       <!-- 顶部 Header -->
       <header
-        class="sticky top-0 z-40 flex items-center justify-between glass-card mx-3 mt-3 px-4 py-3"
+        class="sticky top-0 z-40 flex items-center justify-between glass-card mx-3 mt-[max(12px,env(safe-area-inset-top))] px-4 py-3"
       >
         <div class="flex items-center gap-2 text-lg font-semibold tracking-tight text-primary">
           <span>🌱</span>
@@ -208,7 +208,7 @@ onBeforeUnmount(() => {
 
       <!-- 底部 Tab 栏 -->
       <nav
-        class="fixed bottom-0 left-0 right-0 z-40 flex items-center justify-around glass-card mx-3 mb-3 rounded-glass px-2 py-2"
+        class="fixed bottom-0 left-0 right-0 z-40 flex items-center justify-around glass-card mx-3 mb-[max(12px,env(safe-area-inset-bottom))] rounded-glass px-2 py-2"
       >
         <RouterLink
           v-for="item in navItems"

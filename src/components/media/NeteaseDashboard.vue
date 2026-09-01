@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onBeforeUnmount, watch, nextTick } from 'vue'
-import * as echarts from 'echarts'
+import echarts from '@/utils/echarts'
 import gsap from 'gsap'
 import { Clock, Play, Music2, UserRound, Trophy, Medal } from 'lucide-vue-next'
 import BaseCard from '@/components/common/BaseCard.vue'
